@@ -1,3 +1,5 @@
+package com.example.movieappmad24.components
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,39 +34,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.navigation.Screen
 
 @Composable
-fun HomeViewContent(padding: PaddingValues){
+fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies: List<Movie>){
     Column(
-        modifier = Modifier.padding(padding),
+        modifier = Modifier
+            .padding(padding),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        MovieList(movies = getMovies())
-    }
-}
-
-@Composable
-fun MovieList(movies: List<Movie> = getMovies()){
-    LazyColumn {
-        items(movies) { movie ->
-            MovieRow(movie)
+        LazyColumn {
+            items(movies) { movie ->
+                MovieRow(movie) { movieId ->
+                    navController.navigate(Screen.DetailScreen.createRoute(movieId))
+                }
+            }
         }
     }
 }
 
 @Composable
-fun MovieRow(movie: Movie){
+fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}){
     var showDetails by remember {
         mutableStateOf(false)
     }
 
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(5.dp),
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable {
+                onItemClick(movie.id)
+            },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
@@ -72,10 +77,7 @@ fun MovieRow(movie: Movie){
             Box(
                 modifier = Modifier
                     .height(150.dp)
-                    .fillMaxWidth()
-                    .clickable {
-                        showDetails = !showDetails
-                    },
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -89,18 +91,22 @@ fun MovieRow(movie: Movie){
                         .fillMaxSize()
                         .padding(10.dp),
                     contentAlignment = Alignment.TopEnd
-                ){
+                ) {
                     Icon(
                         tint = MaterialTheme.colorScheme.secondary,
                         imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Add to favorites")
+                        contentDescription = "Add to favorites"
+                    )
                 }
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(6.dp),
+                    .padding(6.dp)
+                    .clickable {
+                        showDetails = !showDetails
+                    },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -116,7 +122,7 @@ fun MovieRow(movie: Movie){
                 )
             }
         }
-        AnimatedVisibility (showDetails) {
+        AnimatedVisibility(showDetails) {
             MovieDetails(movie = movie)
         }
     }
@@ -124,7 +130,7 @@ fun MovieRow(movie: Movie){
 
 @Composable
 fun MovieDetails(movie: Movie){
-    Column (
+    Column(
         modifier = Modifier.padding(10.dp)
     ) {
         Text(text = "Director: ${movie.director}")
