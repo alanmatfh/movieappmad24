@@ -22,7 +22,7 @@ import com.example.movieappmad24.models.NavItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieTopBar(text: String = "Movie App"){
+fun SimpleTopAppBar(text: String = "Movie App"){
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -65,7 +65,7 @@ fun DetailTopBar(title: String, onArrowBackClick: () -> Unit = {}){
 }
 
 @Composable
-fun MovieNavBar(items: List<NavItem>, navController: NavController){
+fun SimpleBottomAppBar(items: List<NavItem>, navController: NavController){
     NavigationBar (
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.primary
