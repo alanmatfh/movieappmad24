@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -39,9 +40,11 @@ import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.navigation.Screen
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies: List<Movie>){
+fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies: List<Movie>,
+                    viewModel: MoviesViewModel){
     Column(
         modifier = Modifier
             .padding(padding),
@@ -49,7 +52,12 @@ fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies
     ) {
         LazyColumn {
             items(movies) { movie ->
-                MovieRow(movie) { movieId ->
+                MovieRow(
+                    movie = movie,
+                    onFavoriteClick = {
+                        movieId -> viewModel.toggleFavorite(movieId)
+                    }
+                ) { movieId ->
                     navController.navigate(Screen.DetailScreen.createRoute(movieId))
                 }
             }
@@ -58,7 +66,7 @@ fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}){
+fun MovieRow(movie: Movie, onFavoriteClick: (String) -> Unit = {}, onItemClick: (String) -> Unit = {}){
     var showDetails by remember {
         mutableStateOf(false)
     }
@@ -86,17 +94,10 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}){
                     placeholder = painterResource(id = R.drawable.movie_image),
                     contentScale = ContentScale.Crop
                 )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
-                    contentAlignment = Alignment.TopEnd
+                FavoriteIcon(
+                    isFavorite = movie.isFavorite
                 ) {
-                    Icon(
-                        tint = MaterialTheme.colorScheme.secondary,
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Add to favorites"
-                    )
+                    onFavoriteClick(movie.id)
                 }
             }
 
@@ -143,5 +144,27 @@ fun MovieDetails(movie: Movie){
             color = MaterialTheme.colorScheme.primary
         )
         Text(text = "Plot: ${movie.plot}")
+    }
+}
+
+@Composable
+fun FavoriteIcon(isFavorite: Boolean, onFavoriteClick: () -> Unit = {}){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        contentAlignment = Alignment.TopEnd
+    ) {
+        Icon(
+            modifier = Modifier.clickable { onFavoriteClick() },
+            tint = MaterialTheme.colorScheme.tertiary,
+            imageVector =
+            if (isFavorite) {
+                Icons.Filled.Favorite
+            }else {
+                Icons.Default.FavoriteBorder
+            },
+            contentDescription = "Add to favorites"
+        )
     }
 }

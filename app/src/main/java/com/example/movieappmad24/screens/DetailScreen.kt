@@ -6,16 +6,16 @@ import androidx.navigation.NavController
 import com.example.movieappmad24.components.DetailTopBar
 import com.example.movieappmad24.components.DetailViewContent
 import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun DetailScreen(navController: NavController, movieId: String?){
-    val movie = getMovies().find { it.id == movieId } ?: return
-    DetailScreenScaffold(navController = navController, movie)
+fun DetailScreen(navController: NavController, movieId: String?, viewModel: MoviesViewModel){
+    val movie = viewModel.movies.find { it.id == movieId } ?: return
+    DetailScreenScaffold(navController, movie, viewModel)
 }
 
 @Composable
-fun DetailScreenScaffold(navController: NavController, movie: Movie){
+fun DetailScreenScaffold(navController: NavController, movie: Movie, viewModel: MoviesViewModel){
     Scaffold(
         topBar = {
             DetailTopBar(title = movie.title) {
@@ -23,6 +23,10 @@ fun DetailScreenScaffold(navController: NavController, movie: Movie){
             }
         }
     ) { innerPadding ->
-        DetailViewContent(padding = innerPadding, movie = movie)
+        DetailViewContent(
+            padding = innerPadding,
+            movie = movie,
+            viewModel = viewModel
+        )
     }
 }

@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.example.movieappmad24.components.SimpleBottomAppBar
 import com.example.movieappmad24.components.SimpleTopAppBar
-import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.models.getNavItems
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun WatchlistScreen(navController: NavController){
+fun WatchlistScreen(navController: NavController, viewModel: MoviesViewModel){
     Scaffold(
         topBar = {
             SimpleTopAppBar(text = "Your Watchlist")
@@ -19,11 +19,11 @@ fun WatchlistScreen(navController: NavController){
             SimpleBottomAppBar(items = getNavItems(), navController = navController)
         }
     ) { innerPadding ->
-        val wlMovies = getMovies().slice(3..5)
         MovieLazyColumn(
             padding = innerPadding,
             navController = navController,
-            movies = wlMovies
+            movies = viewModel.favoriteMovies,
+            viewModel = viewModel
         )
     }
 }
