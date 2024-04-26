@@ -21,7 +21,7 @@ fun Navigation(){
         startDestination = Screen.HomeScreen.route) {
 
         composable(route = Screen.HomeScreen.route){
-            HomeScreen(navController = navController, viewModel = moviesViewModel)
+            HomeScreen(navController = navController)
         }
 
         composable(

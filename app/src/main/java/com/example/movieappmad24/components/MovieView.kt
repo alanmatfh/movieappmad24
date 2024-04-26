@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,12 +40,14 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.navigation.Screen
 import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies: List<Movie>,
+fun MovieLazyColumn(padding: PaddingValues, navController: NavController,
                     viewModel: MoviesViewModel){
+    val movies by viewModel.movies.collectAsState()
     Column(
         modifier = Modifier
             .padding(padding),
@@ -53,7 +56,7 @@ fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies
         LazyColumn {
             items(movies) { movie ->
                 MovieRow(
-                    movie = movie,
+                    movieWithImages = movie,
                     onFavoriteClick = {
                         movieId -> viewModel.toggleFavorite(movieId)
                     }
@@ -66,10 +69,12 @@ fun MovieLazyColumn(padding: PaddingValues, navController: NavController, movies
 }
 
 @Composable
-fun MovieRow(movie: Movie, onFavoriteClick: (String) -> Unit = {}, onItemClick: (String) -> Unit = {}){
+fun MovieRow(movieWithImages: MovieWithImages, onFavoriteClick: (Long) -> Unit = {}, onItemClick: (String) -> Unit = {}){
     var showDetails by remember {
         mutableStateOf(false)
     }
+    val movie = movieWithImages.movie
+    val images = movieWithImages.movieImages
 
     Card(
         modifier = Modifier
@@ -89,7 +94,7 @@ fun MovieRow(movie: Movie, onFavoriteClick: (String) -> Unit = {}, onItemClick: 
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
-                    model = movie.images.first(),
+                    model = images.first(),
                     contentDescription = "Image for the movie ${movie.title}",
                     placeholder = painterResource(id = R.drawable.movie_image),
                     contentScale = ContentScale.Crop
@@ -97,7 +102,7 @@ fun MovieRow(movie: Movie, onFavoriteClick: (String) -> Unit = {}, onItemClick: 
                 FavoriteIcon(
                     isFavorite = movie.isFavorite
                 ) {
-                    onFavoriteClick(movie.id)
+                    onFavoriteClick(movie.movieId)
                 }
             }
 
