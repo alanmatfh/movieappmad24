@@ -18,8 +18,13 @@ data class Movie(
     val plot: String,
     val trailer: String,
     val rating: String,
-    var isFavorite: Boolean = false
-)
+    val isFavorite: Boolean = false
+) {
+    constructor() : this(
+        0, "0", "title", "year", "gernre", "director",
+        "actors", "plot", "trailer", "rating", false
+    )
+}
 
 @Entity
 data class MovieImage(
@@ -37,7 +42,9 @@ data class MovieWithImages(
         entityColumn = "movieId"
     )
     val movieImages: List<MovieImage>
-)
+) {
+    constructor() : this(Movie(), listOf<MovieImage>())
+}
 
 /*fun getMovies(): List<Movie> {
     return listOf(

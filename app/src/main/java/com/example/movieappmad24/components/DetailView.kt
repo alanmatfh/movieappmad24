@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ShapeDefaults
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,20 +35,20 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
-import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.viewmodels.MoviesViewModel
+import com.example.movieappmad24.models.MovieWithImages
+import com.example.movieappmad24.viewmodels.DetailsViewModel
 
 @SuppressLint("DiscouragedApi")
 @Composable
-fun DetailViewContent(padding: PaddingValues, movie: Movie, viewModel: MoviesViewModel){
+fun DetailViewContent(padding: PaddingValues, movie: MovieWithImages, viewModel: DetailsViewModel){
     val context = LocalContext.current
     Column(
         modifier = Modifier.padding(padding),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         MovieRow(
-            movie = movie,
-            onFavoriteClick = { movieId -> viewModel.toggleFavorite(movieId) }
+            movieWithImages = movie,
+            onFavoriteClick = { _ -> viewModel.toggleFavorite() }
         )
 
         Text(
@@ -58,14 +60,14 @@ fun DetailViewContent(padding: PaddingValues, movie: Movie, viewModel: MoviesVie
         SmallVideoPlayer(
             context = context,
             resId = context.resources.getIdentifier(
-                movie.trailer, "raw", context.packageName
+                movie.movie.trailer, "raw", context.packageName
             )
         )
 
         LazyRow {
-            items(movie.images) { image ->
+            items(movie.movieImages) { image ->
                 ImageCard(
-                    imageUrl = image,
+                    imageUrl = image.imgUrl,
                     modifier = Modifier
                         .fillParentMaxWidth(0.95f)
                         .padding(horizontal = 5.dp)

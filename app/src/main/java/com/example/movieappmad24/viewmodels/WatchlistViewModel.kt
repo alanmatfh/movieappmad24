@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class MoviesViewModel(
+class WatchlistViewModel(
     private val repository: MovieRepository
 ) : ViewModel() {
     private val _movies = MutableStateFlow(listOf<MovieWithImages>())
@@ -19,10 +19,9 @@ class MoviesViewModel(
 
     init {
         viewModelScope.launch {
-            repository.getAllMovies().distinctUntilChanged()
-                .collect{ listOfMovies ->
-                    _movies.value = listOfMovies
-                }
+            repository.getFavoriteMovies().distinctUntilChanged().collect{
+                favoriteMovies -> _movies.value = favoriteMovies
+            }
         }
     }
 
@@ -47,5 +46,4 @@ class MoviesViewModel(
             repository.updateMovie(updatedMovie)
         }
     }
-
 }

@@ -57,7 +57,7 @@ android {
 dependencies {
     val nav_version = "2.7.7"
     val lifecycle_version = "2.7.0"
-
+    val work_version = "2.9.0"
     val room_version = "2.6.1"
 
     // room dependencies
@@ -66,6 +66,12 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
+
+    // Work (Java only)
+    implementation("androidx.work:work-runtime:$work_version")
+
+    // Work Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:$work_version")
 
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-exoplayer-dash:1.3.1")

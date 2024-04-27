@@ -1,5 +1,7 @@
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -10,13 +12,13 @@ import com.example.movieappmad24.data.MovieDatabase
 import com.example.movieappmad24.data.MovieRepository
 import com.example.movieappmad24.models.getNavItems
 import com.example.movieappmad24.viewmodels.MoviesViewModel
-import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
+import com.example.movieappmad24.viewmodels.MovieViewModelFactory
 
 @Composable
 fun HomeScreen(navController: NavController){
     val db = MovieDatabase.getDatabase(LocalContext.current)
     val repository = MovieRepository(movieDao = db.movieDao())
-    val factory = MoviesViewModelFactory(repository = repository)
+    val factory = MovieViewModelFactory(repository = repository)
     val viewModel: MoviesViewModel = viewModel(factory = factory)
 
     HomeScreenScaffold(navController = navController, viewModel = viewModel)
@@ -24,6 +26,7 @@ fun HomeScreen(navController: NavController){
 
 @Composable
 fun HomeScreenScaffold(navController: NavController, viewModel: MoviesViewModel){
+    val movies by viewModel.movies.collectAsState()
     Scaffold(
         topBar = {
             SimpleTopAppBar()
@@ -35,7 +38,9 @@ fun HomeScreenScaffold(navController: NavController, viewModel: MoviesViewModel)
         MovieLazyColumn(
             padding = innerPadding,
             navController = navController,
-            viewModel = viewModel
-        )
+            movies = movies
+        ) {
+            movieId -> viewModel.toggleFavorite(movieId)
+        }
     }
 }

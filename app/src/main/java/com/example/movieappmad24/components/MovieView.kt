@@ -46,8 +46,7 @@ import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
 fun MovieLazyColumn(padding: PaddingValues, navController: NavController,
-                    viewModel: MoviesViewModel){
-    val movies by viewModel.movies.collectAsState()
+                    movies: List<MovieWithImages>, onFavoriteClick: (Long) -> Unit = {}){
     Column(
         modifier = Modifier
             .padding(padding),
@@ -58,7 +57,7 @@ fun MovieLazyColumn(padding: PaddingValues, navController: NavController,
                 MovieRow(
                     movieWithImages = movie,
                     onFavoriteClick = {
-                        movieId -> viewModel.toggleFavorite(movieId)
+                        movieId -> onFavoriteClick(movieId)
                     }
                 ) { movieId ->
                     navController.navigate(Screen.DetailScreen.createRoute(movieId))
@@ -69,7 +68,7 @@ fun MovieLazyColumn(padding: PaddingValues, navController: NavController,
 }
 
 @Composable
-fun MovieRow(movieWithImages: MovieWithImages, onFavoriteClick: (Long) -> Unit = {}, onItemClick: (String) -> Unit = {}){
+fun MovieRow(movieWithImages: MovieWithImages, onFavoriteClick: (Long) -> Unit = {}, onItemClick: (Long) -> Unit = {}){
     var showDetails by remember {
         mutableStateOf(false)
     }
@@ -81,7 +80,7 @@ fun MovieRow(movieWithImages: MovieWithImages, onFavoriteClick: (Long) -> Unit =
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                onItemClick(movie.id)
+                onItemClick(movie.movieId)
             },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)

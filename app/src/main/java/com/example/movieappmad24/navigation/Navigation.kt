@@ -15,7 +15,6 @@ import com.example.movieappmad24.viewmodels.MoviesViewModel
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
-    val moviesViewModel: MoviesViewModel = viewModel()
 
     NavHost(navController = navController,
         startDestination = Screen.HomeScreen.route) {
@@ -30,13 +29,12 @@ fun Navigation(){
         ) { backStackEntry ->
             DetailScreen(
                 navController = navController,
-                movieId = backStackEntry.arguments?.getString("movieId"),
-                viewModel = moviesViewModel
+                movieId = backStackEntry.arguments?.getLong("movieId")
             )
         }
 
         composable(route = Screen.WatchlistScreen.route) {
-            WatchlistScreen(navController = navController, viewModel = moviesViewModel)
+            WatchlistScreen(navController = navController)
         }
     }
 }

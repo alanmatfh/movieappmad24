@@ -11,26 +11,28 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class MoviesViewModel(
-    private val repository: MovieRepository
+class DetailsViewModel(
+    private val repository: MovieRepository,
+    private val movieId: Long
 ) : ViewModel() {
-    private val _movies = MutableStateFlow(listOf<MovieWithImages>())
-    val movies: StateFlow<List<MovieWithImages>> = _movies.asStateFlow()
+    private val _movie = MutableStateFlow(MovieWithImages())
+    val movie: StateFlow<MovieWithImages> = _movie.asStateFlow()
 
     init {
         viewModelScope.launch {
-            repository.getAllMovies().distinctUntilChanged()
-                .collect{ listOfMovies ->
-                    _movies.value = listOfMovies
+            repository.getByIdWithImages(movieId).distinctUntilChanged().collect {
+                movWithImg ->
+                // maybe handle errors
+                if (movWithImg != null) {
+                    _movie.value = movWithImg
                 }
+            }
         }
     }
 
-    fun toggleFavorite(movieId: Long) {
+    fun toggleFavorite() {
         viewModelScope.launch {
-            val movieList = _movies.value
-            val foundMovie = movieList.find { it.movie.movieId == movieId } ?: return@launch
-            val movie = foundMovie.movie
+            val movie = _movie.value.movie
             val updatedMovie = Movie(
                 movie.movieId,
                 movie.id,
@@ -47,5 +49,4 @@ class MoviesViewModel(
             repository.updateMovie(updatedMovie)
         }
     }
-
 }
