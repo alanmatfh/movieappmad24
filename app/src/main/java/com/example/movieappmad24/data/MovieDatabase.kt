@@ -13,11 +13,12 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.MovieImage
 import com.example.movieappmad24.models.MovieWithImages
 import kotlinx.coroutines.coroutineScope
 
 @Database(
-    entities = [Movie::class],  // tables in the db
+    entities = [Movie::class, MovieImage::class],  // tables in the db
     version = 1,                // schema version; whenever you change schema you have to increase the version number
     exportSchema = false        // for schema version history updates
 )

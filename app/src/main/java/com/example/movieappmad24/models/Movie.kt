@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-@Entity
+@Entity(tableName = "movie")
 data class Movie(
     @PrimaryKey(autoGenerate = true)
     val movieId: Long = 0,
@@ -26,7 +26,7 @@ data class Movie(
     )
 }
 
-@Entity
+@Entity(tableName = "MovieImage")
 data class MovieImage(
     @PrimaryKey(autoGenerate = true)
     val imgId: Long = 0,
