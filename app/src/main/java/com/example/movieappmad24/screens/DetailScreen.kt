@@ -18,7 +18,7 @@ import com.example.movieappmad24.viewmodels.DetailsViewModelFactory
 fun DetailScreen(navController: NavController, movieId: Long?){
     movieId ?: return
     val db = MovieDatabase.getDatabase(LocalContext.current)
-    val repository = MovieRepository(movieDao = db.movieDao())
+    val repository = MovieRepository(movieDao = db.movieDao(), movieImageDao = db.movieImageDao())
     val factory = DetailsViewModelFactory(repository = repository, movieId = movieId)
     val viewModel: DetailsViewModel = viewModel(factory = factory)
 

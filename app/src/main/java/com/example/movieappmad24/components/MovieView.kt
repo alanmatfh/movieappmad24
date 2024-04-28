@@ -26,7 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +41,6 @@ import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.navigation.Screen
-import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
 fun MovieLazyColumn(padding: PaddingValues, navController: NavController,
@@ -93,7 +91,7 @@ fun MovieRow(movieWithImages: MovieWithImages, onFavoriteClick: (Long) -> Unit =
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
-                    model = images.first(),
+                    model = images.firstOrNull()?.imgUrl,
                     contentDescription = "Image for the movie ${movie.title}",
                     placeholder = painterResource(id = R.drawable.movie_image),
                     contentScale = ContentScale.Crop

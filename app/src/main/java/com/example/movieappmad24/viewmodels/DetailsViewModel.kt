@@ -1,5 +1,6 @@
 package com.example.movieappmad24.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieappmad24.data.MovieRepository

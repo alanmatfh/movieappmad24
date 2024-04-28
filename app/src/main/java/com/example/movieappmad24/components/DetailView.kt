@@ -42,6 +42,9 @@ import com.example.movieappmad24.viewmodels.DetailsViewModel
 @Composable
 fun DetailViewContent(padding: PaddingValues, movie: MovieWithImages, viewModel: DetailsViewModel){
     val context = LocalContext.current
+    val resId = context.resources.getIdentifier(
+        movie.movie.trailer, "raw", context.packageName
+    )
     Column(
         modifier = Modifier.padding(padding),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -57,12 +60,12 @@ fun DetailViewContent(padding: PaddingValues, movie: MovieWithImages, viewModel:
             modifier = Modifier.padding(horizontal = 5.dp)
         )
 
-        SmallVideoPlayer(
-            context = context,
-            resId = context.resources.getIdentifier(
-                movie.movie.trailer, "raw", context.packageName
+        if(resId != 0) {
+            SmallVideoPlayer(
+                context = context,
+                resId = resId
             )
-        )
+        }
 
         LazyRow {
             items(movie.movieImages) { image ->

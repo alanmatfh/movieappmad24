@@ -17,7 +17,7 @@ import com.example.movieappmad24.viewmodels.MovieViewModelFactory
 @Composable
 fun HomeScreen(navController: NavController){
     val db = MovieDatabase.getDatabase(LocalContext.current)
-    val repository = MovieRepository(movieDao = db.movieDao())
+    val repository = MovieRepository(movieDao = db.movieDao(), movieImageDao = db.movieImageDao())
     val factory = MovieViewModelFactory(repository = repository)
     val viewModel: MoviesViewModel = viewModel(factory = factory)
 

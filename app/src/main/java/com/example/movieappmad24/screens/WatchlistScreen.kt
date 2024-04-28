@@ -22,7 +22,7 @@ import com.example.movieappmad24.viewmodels.WatchlistViewModelFactory
 @Composable
 fun WatchlistScreen(navController: NavController){
     val db = MovieDatabase.getDatabase(LocalContext.current)
-    val repository = MovieRepository(movieDao = db.movieDao())
+    val repository = MovieRepository(movieDao = db.movieDao(), movieImageDao = db.movieImageDao())
     val factory = WatchlistViewModelFactory(repository = repository)
     val viewModel: WatchlistViewModel = viewModel(factory = factory)
 

@@ -25,7 +25,7 @@ fun Navigation(){
 
         composable(
             route = Screen.DetailScreen.route,
-            arguments = listOf(navArgument(name = "movieId") {type = NavType.StringType})
+            arguments = listOf(navArgument(name = "movieId") {type = NavType.LongType})
         ) { backStackEntry ->
             DetailScreen(
                 navController = navController,
